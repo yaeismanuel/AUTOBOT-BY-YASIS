@@ -32,7 +32,7 @@ module.exports.run = async function({ api, event, args }) {
     }
   }
 
-  api.sendMessage(`🔍 "${input}"`, event.threadID, event.messageID);
+  api.sendMessage(`Homer AI Bot is typing... "${input}"`, event.threadID, event.messageID);
   
   try {
     const url = event.type === "message_reply" && event.messageReply.attachments[0]?.type === "photo"
@@ -45,7 +45,7 @@ module.exports.run = async function({ api, event, args }) {
       ...url
     });
 
-    api.sendMessage(`${data.message}\n\nType "ai clear" to reset the conversation.`, event.threadID, event.messageID);
+    api.sendMessage(`${data.message}\n\nCreated by : HOMER REBATIS`, event.threadID, event.messageID);
   } catch {
     api.sendMessage('An error occurred while processing your request.', event.threadID, event.messageID);
   }
