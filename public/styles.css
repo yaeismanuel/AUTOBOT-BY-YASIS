@@ -103,8 +103,8 @@ body {
 }
 
 #inputOfPrefix, #inputOfAdmin {
-  padding: 13px;
-  width: 200px;
+  padding: 10px;
+  width: 300px;
   border: 1px solid #ccc;
   border-radius: 8px;
   cursor: pointer;
@@ -119,4 +119,3 @@ body {
 #listOfCommands:not(.modal), #listOfCommandsEvent:not(.modal), #prefixOfCommands:not(.modal), #adminOfCommands:not(.modal) {
   box-shadow: none !important;
 }
-

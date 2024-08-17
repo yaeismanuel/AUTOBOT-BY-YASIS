@@ -23,7 +23,7 @@
                <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Features </a>
                   <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                     <a class="dropdown-item" href="#">Cookies Extractor</a>
+
                      <div class="dropdown-divider"></div>
                      <a class="dropdown-item" href="/step_by_step_guide">Step-by-Step Guide</a>
                   </div>
@@ -35,7 +35,6 @@
          </div>
       </nav>
       <div class="container">
-         <h1 class="col text-center" style="font-size: 20px; padding: 10px;"><b>HOMER AUTOBOT</b></h1>
          <form id="json-form" onsubmit="submitForm(event)">
             <div class="row">
                <div class="col-md-12">
@@ -53,9 +52,9 @@
             <label style="font-size: 14px; display: flex; align-items: center; padding: 22px;">
             <input type="checkbox" id="agreeCheckbox" style="margin-right: 10px;">agreed to the Terms and Conditions.</label>
             <div class="col text-center">
-            <button class="btn btn-primary" onclick="State()" disabled id="submitButton" style="width: 100%">Submit</button><br><br>
-            <button class="btn btn-primary" onclick="window.location.href='/online_user'" style="width: 100%">view online session</button>
+            <button class="btn btn-primary" onclick="State()" disabled id="submitButton" style="width: 100%">Submit</button>
             </div>
+            <div id="result" class="container text-center" style="display: none;"></div>
          </form>
          <p style=" display:none; margin-top: 10px"><b>Enter your Appstate here</b></p>
       </div>
@@ -85,6 +84,7 @@
       </div>
       <div id="result" class="container text-center" style="display: none;"></div>
       <div class="footer">
+      	 <p><b>© 2024 || Homer Rebatis</b></p><br>
          <p>Time: <span id="time"></span>
          </p>
          <p>Ping: <span id="ping"></span>
