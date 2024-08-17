@@ -1,32 +1,52 @@
 const axios = require('axios');
 
 module.exports.config = {
-    name: "ai",
-    version: "1.0.0",
-    hasPermssion: 0,
-    credits: "Homer", // Changed the credits to "Homer"
-    description: "EDUCATIONAL",
-    usePrefix: true,
-    commandCategory: "AI",
-    usages: "[question]",
-    cooldowns: 10
+  name: 'ai',
+  version: '1.0.0',
+  hasPermission: 0,
+  usePrefix: false,
+  aliases: ['gpt', 'openai'],
+  description: "An AI command powered by GPT-4",
+  usages: "ai [prompt]",
+  credits: 'Developer',
+  cooldowns: 3,
+  dependencies: {
+    "axios": ""
+  }
 };
 
-module.exports.run = async function ({ api, event, args }) {
-    const question = args.join(' ');
-    const apiUrl = `https://markdevsapi-2014427ac33a.herokuapp.com/gpt4?ask=${encodeURIComponent(question)}`;
+module.exports.run = async function({ api, event, args }) {
+  const input = args.join(' ');
 
-    if (!question) return api.sendMessage("send question babe balik na tayo.", event.threadID, event.messageID);
-
+  if (!input) {
+    api.sendMessage(`Please provide a question or statement after 'ai'. For example: 'ai What is the capital of France?'`, event.threadID, event.messageID);
+    return;
+  }
+  
+  if (input === "clear") {
     try {
-        api.sendMessage(" Homer AI Bot is typing...", event.threadID, event.messageID);
-
-        const response = await axios.get(apiUrl);
-        const answer = response.data.answer;
-
-        api.sendMessage(`𝗔𝗜 🚀\n━━━━━━━━━━━━━━━━━━━\n𝗤𝘂𝗲𝘀𝘁𝗶𝗼𝗻: ${question}\n━━━━━━━━━━━━━━━━━━━\n𝗔𝗻𝘀𝘄𝗲𝗿: ${answer}\n\nthis bot was create by Homer Rebstis\n𝓒𝓻𝓮𝓭𝓲𝓽𝓼: https://www.facebook.com/helloworld5432184919`, event.threadID, event.messageID); // Added the FB link
-    } catch (error) {
-        console.error(error);
-        api.sendMessage("error to fetch response.", event.threadID);
+      await axios.post('https://gpt-4-cfgh.onrender.com/clear', { id: event.senderID });
+      return api.sendMessage("Chat history has been cleared.", event.threadID, event.messageID);
+    } catch {
+      return api.sendMessage('An error occurred while clearing the chat history.', event.threadID, event.messageID);
     }
+  }
+
+  api.sendMessage(`🔍 "${input}"`, event.threadID, event.messageID);
+  
+  try {
+    const url = event.type === "message_reply" && event.messageReply.attachments[0]?.type === "photo"
+      ? { link: event.messageReply.attachments[0].url }
+      : {};
+
+    const { data } = await axios.post('https://gpt-4-cfgh.onrender.com/chat', {
+      prompt: input,
+      customId: event.senderID,
+      ...url
+    });
+
+    api.sendMessage(`${data.message}\n\nCreated by : HOMER REBATIS`, event.threadID, event.messageID);
+  } catch {
+    api.sendMessage('An error occurred while processing your request.', event.threadID, event.messageID);
+  }
 };
