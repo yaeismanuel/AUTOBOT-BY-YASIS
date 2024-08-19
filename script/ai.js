@@ -1,49 +1,52 @@
 const axios = require('axios');
 
 module.exports.config = {
-    name: "ai",
-    version: "1.0.0",
-    hasPermission: 0,
-    credits: "Cici",
-    description: "Gpt architecture",
-    usePrefix: false,
-    commandCategory: "GPT4",
-    cooldowns: 5,
+  name: 'ai',
+  version: '1.0.0',
+  hasPermission: 0,
+  usePrefix: false,
+  aliases: ['gpt', 'openai'],
+  description: "An AI command powered by GPT-4",
+  usages: "ai [prompt]",
+  credits: 'Developer',
+  cooldowns: 3,
+  dependencies: {
+    "axios": ""
+  }
 };
 
-module.exports.run = async function ({ api, event, args }) {
+module.exports.run = async function({ api, event, args }) {
+  const input = args.join(' ');
+
+  if (!input) {
+    api.sendMessage(`Please provide a question or statement after 'ai'. For example: 'ai What is the capital of France?'`, event.threadID, event.messageID);
+    return;
+  }
+  
+  if (input === "clear") {
     try {
-        const { messageID, messageReply } = event;
-        let prompt = args.join(' ');
-
-        if (messageReply) {
-            const repliedMessage = messageReply.body;
-            prompt = `${repliedMessage} ${prompt}`;
-        }
-
-        if (!prompt) {
-            return api.sendMessage('𝖸𝖤𝖲?, 𝖨𝖬 𝖠𝖫𝖨𝖵𝖤 𝖪𝖨𝖭𝖣𝖫𝖸 𝖯𝖱𝖮𝖵𝖨𝖣𝖤 𝖸𝖮𝖴𝖱 𝖰𝖴𝖤𝖲𝖳𝖨?(⁠≧⁠▽⁠≦⁠)/𝗇𝖤𝖷𝖠𝖬𝖯𝖫𝖤: ai what is love?, event.threadID, messageID);
-        }
-        api.sendMessage('🕙| Homer AI Bot is typing...', event.threadID);
-
-        // Delay
-        await new Promise(resolve => setTimeout(resolve, 2000)); // Adjust the delay time as needed
-
-        const gpt4_api = `https://gpt4withcustommodel.onrender.com/gpt?query=${encodeURIComponent(prompt)}&model=gpt-3.5-turbo-16k-0613`;
-
-        const response = await axios.get(gpt4_api);
-
-        if (response.data && response.data.response) {
-            const generatedText = response.data.response;
-
-            // Ai Answer Here
-            api.sendMessage(`➪ HOMER AI BOT IS ANSWERED✅\n━━━━━━━━━━━━━━━━\n🚦𝖠𝖭𝖲𝖶𝖤𝖱𝖤𝖣:➪${generatedText}\n━━━━━━━━━━━━━━━━`, event.threadID, messageID);
-        } else {
-            console.error('API response did not contain expected data:', response.data);
-            api.sendMessage(`❌ An error occurred while generating the text response. Please try again later. Response data: ${JSON.stringify(response.data)}`, event.threadID, messageID);
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        api.sendMessage(`❌ An error occurred while generating the text response. Please try again later. Error details: ${error.message}`, event.threadID, event.messageID);
+      await axios.post('https://gpt-4-cfgh.onrender.com/clear', { id: event.senderID });
+      return api.sendMessage("Chat history has been cleared.", event.threadID, event.messageID);
+    } catch {
+      return api.sendMessage('An error occurred while clearing the chat history.', event.threadID, event.messageID);
     }
+  }
+
+  api.sendMessage(`🔍 "${input}"`, event.threadID, event.messageID);
+  
+  try {
+    const url = event.type === "message_reply" && event.messageReply.attachments[0]?.type === "photo"
+      ? { link: event.messageReply.attachments[0].url }
+      : {};
+
+    const { data } = await axios.post('https://markdevs-last-api-2epw.onrender.com/api/v2/gpt4?query=', {
+      prompt: input,
+      customId: event.senderID,
+      ...url
+    });
+
+    api.sendMessage(`${data.message}\n\n\nThis Bot Created by : HOMER REBATIS`, event.threadID, event.messageID);
+  } catch {
+    api.sendMessage('An error occurred while processing your request.', event.threadID, event.messageID);
+  }
 };
