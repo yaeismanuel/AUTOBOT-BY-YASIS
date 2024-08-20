@@ -25,7 +25,7 @@ module.exports.run = async function({
     const {
       data
     } = await axios.get(`https://markdevs-last-api-2epw.onrender.com/api/v2/gpt4?query=${encodeURIComponent(input)}`);
-    const response = data.response;
+    const respond = data.respond;
     api.sendMessage(response, event.threadID, event.messageID);
   } catch (error) {
     api.sendMessage('An error occurred while processing your request.', event.threadID, event.messageID);
