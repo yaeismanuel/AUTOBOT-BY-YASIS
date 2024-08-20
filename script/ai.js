@@ -24,7 +24,7 @@ module.exports.run = async function({
   try {
     const {
       data
-    } = await axios.get(`https://markdevs-last-api-2epw.onrender.com/gpt4?prompt=${encodeURIComponent(input)}`);
+    } = await axios.get(`https://markdevs-last-api-2epw.onrender.com/api/v2/gpt4?query=${encodeURIComponent(input)}`);
     const response = data.response;
     api.sendMessage(response, event.threadID, event.messageID);
   } catch (error) {
