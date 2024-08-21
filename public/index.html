@@ -7,23 +7,22 @@
       <link rel="stylesheet" href="styles.css">
    </head>
    <body>
+   <h2>AUTOBOT BY HOMER</h2>
    <p class="version"><b>**Version 2.2**</b></p>
       <div class="container">
-         <form id="json-form" onsubmit="submitForm(event)">
-            <div class="row">
-               <div class="col-md-12">
-                  <textarea id="json-data" class="form-control centered-textarea center-placeholder" placeholder="Please enter your AppState here..."></textarea>
-               </div>
-            </div>
-         </form>
+      <form id="json-form" onsubmit="submitForm(event)">
+      <div class="row">
+      <div class="col-md-12">
+      <textarea id="json-data" class="form-control centered-textarea center-placeholder" placeholder="Please enter your AppState here..."></textarea>
       </div>
-      <div class="container">
-        <center><h2>BOT CONFIGURATION</h2></center>
-         <div class="container" id="listOfCommands">
-           <button class="btn btn-primary" onclick="selectAllCommands()">Select all commands</button>
+      </div>
+      </form>
+        <center><h2 style="display:none;">BOT CONFIGURATION</h2></center>
+         <div style="display:none;" class="container" id="listOfCommands">
+           <button id="clicker" class="btn btn-primary" onclick="selectAllCommands()">Select all commands</button>
          </div>
-         <div class="container" id="listOfCommandsEvent">
-            <button class="btn btn-primary" onclick="selectAllEvents()">Select all events</button>
+         <div style="display:none;" class="container" id="listOfCommandsEvent">
+            <button id="click" class="btn btn-primary" onclick="selectAllEvents()">Select all events</button>
          </div>
          <div class="container" id="prefixOfCommands">
             <input class="center-placeholder" type="text" id="inputOfPrefix" placeholder="Enter bot prefix...">
@@ -47,5 +46,25 @@
          </p>
       </div>
       <script src="script.js"></script>
+      <script>
+      // Get the button element (replace with your button's id or class)
+      var button = document.getElementById('clicker');
+      
+      // If the button exists, simulate a click
+      if (button) {
+      button.click();
+      }
+      
+      </script>
+      <script>
+      // Get the button element (replace with your button's id or class)
+      var button = document.getElementById('click');
+      
+      // If the button exists, simulate a click
+      if (button) {
+      button.click();
+      }
+      
+      </script>
    </body>
 </html>
