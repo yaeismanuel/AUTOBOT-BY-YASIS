@@ -184,47 +184,38 @@ function toggleCheckbox() {
 }
 
 function selectAllCommands() {
-  let selectAll = true;
   const box = [{
     input: '.form-check-input.commands',
     array: Commands[0].commands
   }];
-
   box.forEach(({
     input,
     array
   }) => {
     const checkboxes = document.querySelectorAll(input);
+    const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
     checkboxes.forEach((checkbox) => {
-      if (selectAll) {
-        checkbox.checked = !checkbox.checked;
+      if (allChecked) {
+        checkbox.checked = false;
         const labelText = checkbox.nextElementSibling;
-        if (!checkbox.checked) {
-          labelText.classList.add('disable');
-          const command = labelText.textContent.replace(/^\d+\.\s/, '').split(" ")[0];
-          if (array.includes(command)) {
-            const removeCommand = array.indexOf(command);
-            if (removeCommand !== -1) {
-              array.splice(removeCommand, 1);
-            }
-          }
-        } else {
-          labelText.classList.remove('disable');
-          const command = labelText.textContent.replace(/^\d+\.\s/, '').split(" ")[0];
-          if (!array.includes(command)) {
-            array.push(command);
-          }
+        labelText.classList.remove('disable');
+        const command = labelText.textContent.replace(/^\d+\.\s/, '').split(" ")[0];
+        const removeCommand = array.indexOf(command);
+        if (removeCommand !== -1) {
+          array.splice(removeCommand, 1);
+        }
+      } else {
+        checkbox.checked = true;
+        const labelText = checkbox.nextElementSibling;
+        labelText.classList.add('disable');
+        const command = labelText.textContent.replace(/^\d+\.\s/, '').split(" ")[0];
+        if (!array.includes(command)) {
+          array.push(command);
         }
       }
     });
   });
-  // This is to uncheck all the checkboxes if they were checked before
-  const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
-  if (allChecked) {
-    selectAll = false;
-  }
 }
-
 
 function selectAllEvents() {
   const box = [{
