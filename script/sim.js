@@ -17,8 +17,8 @@ module.exports.run = async function({ api, event, args }) {
 		const content = encodeURIComponent(args.join(" "));
 		if (!args[0]) return api.sendMessage("Please type a message...", tid, mid);
 		try {
-				const res = await axios.get(`https://sim-api-ctqz.onrender.com/sim?query=${content}`);
-				const respond = res.data.respond;
+				const res = await axios.get(`https://markdevs-last-api-2epw.onrender.com/sim?q=${content}`);
+				const response = res.data.response;
 				if (res.data.error) {
 						api.sendMessage(`Error: ${res.data.error}`, tid, (error, info) => {
 								if (error) {
@@ -26,7 +26,7 @@ module.exports.run = async function({ api, event, args }) {
 								}
 						}, mid);
 				} else {
-						api.sendMessage(respond, tid, (error, info) => {
+						api.sendMessage(response, tid, (error, info) => {
 								if (error) {
 										console.error(error);
 								}
