@@ -17,13 +17,13 @@ module.exports.run = async function ({ api, event, args }) {
     api.sendMessage(msg, event.threadID, event.messageID);
   }
 
-  const url = "https://hercai.onrender.com/v3/hercai";
+  const url = "https://markdevs-last-api-2epw.onrender.com/api/adobo/gpt?query=";
 
   if (!question) return sendMessage("Please provide a question.");
 
   try {
-    const response = await get(`${url}?question=${encodeURIComponent(question)}`);
-    sendMessage(response.data.reply);
+    const result = await get(`${url}?question=${encodeURIComponent(question)}`);
+    sendMessage(result.data.reply);
   } catch (error) {
     sendMessage("An error occurred: " + error.message);
   }

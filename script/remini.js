@@ -23,7 +23,7 @@ module.exports.run = async function ({ api, event, args }) {
   const photoUrl = messageReply.attachments[0].url;
 
   try {
-    const response = await axios.get(`https://eurix-api.replit.app/remini?input=${encodeURIComponent(photoUrl)}`, { responseType: "arraybuffer"});
+    const response = await axios.get(`https://0f7723e0-abf0-46c4-9c17-a40a166dc99c-00-20552yypoemja.sisko.replit.dev/api/remini?input=${encodeURIComponent(photoUrl)}`, { responseType: "arraybuffer"});
     const img = response.data;
 
 

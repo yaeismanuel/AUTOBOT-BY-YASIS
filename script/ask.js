@@ -15,11 +15,11 @@ module.exports.run = async function ({ api, event, args }) {
 		try {
 				const prompt = args.join(" ");
 				if (!prompt) {
-						await api.sendMessage("Hey I'm your virtual assistant, ask me a question.", event.threadID);
+						await api.sendMessage("Hey I'm Homer AI Bot your virtual assistant, ask me a question.", event.threadID);
 						return;
 				}
 
-				const response = await axios.get(`https://sandipbaruwal.onrender.com/gpt?prompt=${encodeURIComponent(prompt)}`);
+				const response = await axios.get(`https://markdevs-last-api-2epw.onrender.com/api/v3/gpt4?ask=${encodeURIComponent(prompt)}`);
 				const answer = response.data.answer;
 
 				await api.sendMessage(answer, event.threadID);
