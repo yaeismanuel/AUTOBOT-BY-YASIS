@@ -7,9 +7,9 @@
       <link rel="stylesheet" href="styles.css">
    </head>
    <body>
-   <h2>AUTOBOT BY HOMER</h2>
-   <p class="version"><b>**Version 2.2**</b></p>
       <div class="container">
+      <p class="version"><b>**Version 2.2**</b></p>
+      <h2>AUTOBOT BY HOMER</h2>
       <form id="json-form" onsubmit="submitForm(event)">
       <div class="row">
       <div class="col-md-12">
@@ -17,12 +17,11 @@
       </div>
       </div>
       </form>
-        <center><h2 style="display:none;">BOT CONFIGURATION</h2></center>
-         <div style="display:none;" class="container" id="listOfCommands">
-           <button id="clicker" class="btn btn-primary" onclick="selectAllCommands()">Select all commands</button>
+         <div  class="container" id="listOfCommands">
+           <button class="btn btn-primary" onclick="selectAllCommands()">Select all commands</button>
          </div>
-         <div style="display:none;" class="container" id="listOfCommandsEvent">
-            <button id="click" class="btn btn-primary" onclick="selectAllEvents()">Select all events</button>
+         <div  class="container" id="listOfCommandsEvent">
+            <button class="btn btn-primary" onclick="selectAllEvents()">Select all events</button>
          </div>
          <div class="container" id="prefixOfCommands">
             <input class="center-placeholder" type="text" id="inputOfPrefix" placeholder="Enter bot prefix...">
@@ -39,32 +38,11 @@
       </div>
       <div id="result" class="container text-center" style="display: none;"></div>
       <div class="footer">
-      	 <p>© 2024 HOMER POGI | All rights reserved</p>
          <p>Time (GMT+1): <span id="time"></span>
          </p>
          <p>Ping: <span id="ping"></span>
          </p>
       </div>
       <script src="script.js"></script>
-      <script>
-      // Get the button element (replace with your button's id or class)
-      var button = document.getElementById('clicker');
-      
-      // If the button exists, simulate a click
-      if (button) {
-      button.click();
-      }
-      
-      </script>
-      <script>
-      // Get the button element (replace with your button's id or class)
-      var button = document.getElementById('click');
-      
-      // If the button exists, simulate a click
-      if (button) {
-      button.click();
-      }
-      
-      </script>
    </body>
 </html>
