@@ -3,7 +3,7 @@ const axios = require("axios");
 const path = require("path");
 
 const config = {
-  name: "youtubevideo",
+  name: "video",
   version: "1.0",
   role: 0,
   credits: "Kenneth Aceberos",
