@@ -17,7 +17,7 @@ module.exports.run = async function({ api, event, args }) {
 
   try {
     const result = await axios.get('https://markdevs-last-api-2epw.onrender.com/search/lyrics?q=' + t);
-    const { image, lyrics, artist, title } = result.data;
+    const { image, lyrics, artist, title } = r.data;
 
     let ly = __dirname + "/../public/image/lyrics.png";
     let suc = (await axios.get(image, { responseType: "arraybuffer" })).data;
