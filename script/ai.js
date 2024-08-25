@@ -32,7 +32,7 @@ module.exports["run"] = async function({ api, event, args }) {
     }
   }
 
-  api.sendMessage(`🌟 | GEO TECH AI Responding to "${input}" please wait...`, event.threadID, event.messageID);
+  api.sendMessage(`Homer AI Bot Responding to "${input}" please wait...`, event.threadID, event.messageID);
   
   try {
     const url = event.type === "message_reply" && event.messageReply.attachments[0]?.type === "photo"
@@ -44,7 +44,7 @@ module.exports["run"] = async function({ api, event, args }) {
       customId: event.senderID,
       ...url
     });
-    api.sendMessage(`卐 | 𝗚𝗣𝗧-𝟰 (𝗔𝘀𝘀𝗶𝘀𝘁𝗮𝗻𝘁)\n━━━━━━━━━━━━━━━━━━\n${data.message}\n━━━━━━━━━━━━━━━━━━\n卐 𝙾𝚠𝚗𝚎𝚛 : 🌟 | GEO TECH AI :`, event.threadID, event.messageID);
+    api.sendMessage(`卐 | 𝗚𝗣𝗧-𝟰 (𝗔𝘀𝘀𝗶𝘀𝘁𝗮𝗻𝘁)\n━━━━━━━━━━━━━━━━━━\n${data.message}\n━━━━━━━━━━━━━━━━━━\n卐 Developed by : Homer Rebstis\nFacebook Owner :\nhttps://www.facebook.com/helloworld5432184919`, event.threadID, event.messageID);
   } catch {
     api.sendMessage('An error occurred while processing your request.', event.threadID, event.messageID);
   }
