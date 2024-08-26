@@ -32,7 +32,7 @@ module.exports["run"] = async function({ api, event, args }) {
     }
   }
 
-  api.sendMessage(`Homer AI Bot Responding to "${input}" please wait...`, event.threadID, event.messageID);
+  api.sendMessage(`The Bot Responding to "${input}" please wait...`, event.threadID, event.messageID);
   
   try {
     const url = event.type === "message_reply" && event.messageReply.attachments[0]?.type === "photo"
