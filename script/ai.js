@@ -15,7 +15,7 @@ module.exports.run = async function ({ api, event, args }) {
 		try {
 				const prompt = args.join(" ");
 				if (!prompt) {
-						await api.sendMessage("Hey I'm Homer AI Bot your virtual assistant, ask me a question.\nUsage : homer <your question>\nExample : homer what is love?", event.threadID);
+						await api.sendMessage("Hey I'm Homer AI Bot your virtual assistant, ask me a question.\nUsage : ai <your question>\nExample : ai what is love?", event.threadID);
 						return;
 				}
 
