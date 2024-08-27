@@ -17,17 +17,17 @@ module.exports.run = async function ({ api, event, args }) {
   if (!prompt) return api.sendMessage(`Please enter a prompt.`, event.threadID);
   api.sendTypingIndicator(event.threadID);
   try {
-    const geminiApi = `https://deku-rest-api.gleeze.com`;
+    const geminiApi = `https://ggwp-ifzt.onrender.com`;
     if (event.type == "message_reply") {
       if (event.messageReply.attachments[0]?.type == "photo") {
         url = encodeURIComponent(event.messageReply.attachments[0].url);
-        const res = (await axios.get(`${geminiApi}/new/gemini?prompt=${prompt}&url=${url}`)).data;
+        const res = (await axios.get(`${geminiApi}/gemini?prompt=${prompt}&url=${url}`)).data;
         return api.sendMessage(res.gemini, event.threadID);
       } else {
         return api.sendMessage('Please reply to an image.', event.threadID);
       }
     }
-    const response = (await axios.get(`${geminiApi}/new/gemini?prompt=${prompt}`)).data;
+    const response = (await axios.get(`${geminiApi}/gemini?prompt=${prompt}`)).data;
     return api.sendMessage(response.gemini, event.threadID);
   } catch (error) {
     console.error(error);
