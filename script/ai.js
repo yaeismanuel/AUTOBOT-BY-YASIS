@@ -1,29 +1,51 @@
 const axios = require('axios');
 
 module.exports.config = {
-		name: "ai",
-		version: 1.0,
-		credits: "OtinXSandip",
-		description: "AI",
-		hasPrefix: false,
-		usages: "{pn} [prompt]",
-		aliases: [],
-		cooldown: 0,
+  name: 'ai',
+  version: '1.0.0',
+  role: 0,
+  hasPrefix: false,
+  aliases: [],
+  description: "An AI command powered by GPT-4",
+  usages: "ai [prompt]",
+  credits: 'Developer',
+  cooldowns: 3,
+  dependencies: {
+    "axios": ""
+  }
 };
 
-module.exports.run = async function ({ api, event, args }) {
-		try {
-				const prompt = args.join(" ");
-				if (!prompt) {
-						await api.sendMessage("Hey I'm Homer AI Bot your virtual assistant, ask me a question.\nUsage : ai <your question>\nExample : ai what is love?", event.threadID);
-						return;
-				}
+module.exports["run"] = async function({ api, event, args }) {
+  const input = args.join(' ');
 
-				const response = await axios.get(`https://markdevs-last-api-2epw.onrender.com/api/v3/gpt4?ask=${encodeURIComponent(prompt)}`);
-				const answer = response.data.answer;
+  if (!input) {
+    api.sendMessage(`Please provide a question or statement after 'ai'. For example: 'ai What is the capital of France?'`, event.threadID, event.messageID);
+    return;
+  }
+  
+  if (input === "clear") {
+    try {
+      await axios.post('https://satomoigpt.onrender.com/clear', { id: event.senderID });
+      return api.sendMessage("Chat history has been cleared.", event.threadID, event.messageID);
+    } catch {
+      return api.sendMessage('An error occurred while clearing the chat history.', event.threadID, event.messageID);
+    }
+  }
 
-				await api.sendMessage(answer, event.threadID);
-		} catch (error) {
-				console.error("Error:", error.message);
-		}
+  api.sendMessage(`🔍 "${input}"...`, event.threadID, event.messageID);
+  
+  try {
+    const url = event.type === "message_reply" && event.messageReply.attachments[0]?.type === "photo"
+      ? { link: event.messageReply.attachments[0].url }
+      : {};
+
+    const { data } = await axios.post('https://deku-rest-api.gleeze.com/new/gemini', {
+      prompt: input,
+      customId: event.senderID,
+      ...url
+    });
+    api.sendMessage(`卐 | 𝗚𝗣𝗧-𝟰 (𝗔𝘀𝘀𝗶𝘀𝘁𝗮𝗻𝘁)\n━━━━━━━━━━━━━━━━━━\n${data.message}\n━━━━━━━━━━━━━━━━━━\n卐 𝙾𝚠𝚗𝚎𝚛 : 𝙷𝚘𝚖𝚎𝚛 𝚁𝚎𝚋𝚊𝚝𝚒𝚜`, event.threadID, event.messageID);
+  } catch {
+    api.sendMessage('An error occurred while processing your request.', event.threadID, event.messageID);
+  }
 };
