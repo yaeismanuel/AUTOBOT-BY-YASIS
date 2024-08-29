@@ -39,7 +39,7 @@ module.exports["run"] = async function({ api, event, args }) {
       ? { link: event.messageReply.attachments[0].url }
       : {};
 
-    const { data } = await axios.post('https://deku-rest-api.gleeze.com/new/gemini', {
+    const { data } = await axios.post('https://satomoigpt.onrender.com/chat', {
       prompt: input,
       customId: event.senderID,
       ...url
