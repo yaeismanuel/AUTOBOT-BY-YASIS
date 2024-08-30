@@ -1,51 +1,62 @@
-const axios = require('axios');
+const axios = require("axios");
 
-module.exports.config = {
-  name: 'ai',
-  version: '1.0.0',
-  role: 0,
-  hasPrefix: false,
-  aliases: [],
-  description: "An AI command powered by GPT-4",
-  usages: "ai [prompt]",
-  credits: 'Developer',
-  cooldowns: 3,
-  dependencies: {
-    "axios": ""
-  }
-};
-
-module.exports["run"] = async function({ api, event, args }) {
-  const input = args.join(' ');
-
-  if (!input) {
-    api.sendMessage(`Please provide a question or statement after 'ai'. For example: 'ai What is the capital of France?'`, event.threadID, event.messageID);
-    return;
-  }
-  
-  if (input === "clear") {
+async function aic(q, uid) {
     try {
-      await axios.post('https://satomoigpt.onrender.com/clear', { id: event.senderID });
-      return api.sendMessage("Chat history has been cleared.", event.threadID, event.messageID);
-    } catch {
-      return api.sendMessage('An error occurred while clearing the chat history.', event.threadID, event.messageID);
+        const response = await axios.get(`${global.NashBot.END}gpt4?prompt=${encodeURIComponent(q)}&uid=${uid}`);
+        return response.data.gpt4;
+    } catch (error) {
+        console.error("Error fetching data:", error.message);
+        return "Failed to fetch data. Please try again later.";
     }
-  }
+}
 
-  api.sendMessage(`🔍 "${input}"...`, event.threadID, event.messageID);
-  
-  try {
-    const url = event.type === "message_reply" && event.messageReply.attachments[0]?.type === "photo"
-      ? { link: event.messageReply.attachments[0].url }
-      : {};
+module.exports = {
+    name: "ai",
+    description: "Talk to GPT4 (conversational)",
+    nashPrefix: false,
+    version: "1.0.2",
+    role: 0,
+    cooldowns: 5,
+    aliases: ["ai"],
+    execute(api, event, args, prefix) {
+        const { threadID, messageID, senderID } = event;
+        let prompt = args.join(" ");
+        if (!prompt) return api.sendMessage("Please enter a prompt.", threadID, messageID);
+        
+        if (!global.handle) {
+            global.handle = {};
+        }
+        if (!global.handle.replies) {
+            global.handle.replies = {};
+        }
 
-    const { data } = await axios.post('https://satomoigpt.onrender.com/chat', {
-      prompt: input,
-      customId: event.senderID,
-      ...url
-    });
-    api.sendMessage(`卐 | 𝗚𝗣𝗧-𝟰 (𝗔𝘀𝘀𝗶𝘀𝘁𝗮𝗻𝘁)\n━━━━━━━━━━━━━━━━━━\n${data.message}\n━━━━━━━━━━━━━━━━━━\n卐 𝙾𝚠𝚗𝚎𝚛 : 𝙷𝚘𝚖𝚎𝚛 𝚁𝚎𝚋𝚊𝚝𝚒𝚜`, event.threadID, event.messageID);
-  } catch {
-    api.sendMessage('An error occurred while processing your request.', event.threadID, event.messageID);
-  }
+        api.sendMessage(
+            "•| 𝙷𝙾𝙼𝙴𝚁 𝙰𝙸 𝙱𝙾𝚃 |•\n\n" +
+            "⏳ Searching for answer..." +
+            '\n\n[ 𝚃𝚢𝚙𝚎 "𝚌𝚕𝚎𝚒𝚛" 𝚝𝚘 𝚛𝚎𝚜𝚎𝚝 𝚝𝚑𝚎 𝚌𝚘𝚗𝚟𝚎𝚛𝚜𝚎𝚜𝚜𝚒𝚘𝚟𝚎 𝚠𝚒𝚝𝚑 𝙰𝙸 ]',
+            threadID,
+            async (err, info) => {
+                if (err) return;
+                try {
+                    const response = await aic(prompt, senderID);
+                    api.editMessage(
+                        "•| 𝙷𝙾𝙼𝙴𝚁 𝙰𝙸 𝙱𝙾𝚃 |•\n\n" +
+                        response +
+                        "\n\n[ 𝙲𝙾𝙽𝚃𝙸𝙽𝚄𝙴 𝚃𝙷𝙴 𝙲𝙾𝙽𝚅𝙴𝚁𝚂𝙰𝚃𝙸𝙾𝙽 𝚆𝙸𝚃𝙷 𝙰𝙸 ]",
+                        info.messageID
+                    );
+                    global.handle.replies[info.messageID] = {
+                        cmdname: module.exports.name,
+                        this_mid: info.messageID,
+                        this_tid: info.threadID,
+                        tid: threadID,
+                        mid: messageID,
+                    };
+                } catch (g) {
+                    api.sendMessage("Error processing your request: " + g.message, threadID);
+                }
+            },
+            messageID
+        );
+    },
 };
