@@ -1,70 +1,51 @@
 const axios = require('axios');
 
-async function gptConvoAPI(ask, id) {
+module.exports.config = {
+  name: 'ai',
+  version: '1.0.0',
+  role: 0,
+  hasPrefix: false,
+  aliases: [],
+  description: "An AI command powered by GPT-4",
+  usages: "ai [prompt]",
+  credits: 'Developer',
+  cooldowns: 3,
+  dependencies: {
+    "axios": ""
+  }
+};
+
+module.exports["run"] = async function({ api, event, args }) {
+  const input = args.join(' ');
+
+  if (!input) {
+    api.sendMessage(`Please provide a question or statement after 'ai'. For example: 'ai What is the capital of France?'`, event.threadID, event.messageID);
+    return;
+  }
+  
+  if (input === "clear") {
     try {
-        const response = await axios.get(`https://jonellccprojectapis10.adaptable.app/api/gptconvo?ask=${encodeURIComponent(ask)}&id=${id}`);
-        
-        if (response.data && response.data.response) {
-            return response.data.response;
-        } else {
-            return "Unexpected API response format. Please check the API or contact support.";
-        }
-    } catch (error) {
-        console.error("Error fetching data:", error.message);
-        return "Failed to fetch data. Please try again later.";
+      await axios.post('https://satomoigpt.onrender.com/clear', { id: event.senderID });
+      return api.sendMessage("Chat history has been cleared.", event.threadID, event.messageID);
+    } catch {
+      return api.sendMessage('An error occurred while clearing the chat history.', event.threadID, event.messageID);
     }
-}
+  }
 
-module.exports = {
-    name: "ai",
-    description: "Interact with GPT-3 conversational AI",
-    nashPrefix: false,
-    version: "1.0.0",
-    role: 0,
-    cooldowns: 5,
-    async execute(api, event, args) {
-        const { threadID, messageID, senderID } = event;
-        const message = args.join(" ");
+  api.sendMessage(`𝙷𝙾𝙼𝙴𝚁 𝙰𝙸 𝙱𝙾𝚃 𝚁𝙴𝚂𝙿𝙾𝙽𝙳𝙸𝙽𝙶 𝚃𝙾 to "${input}" 𝙿𝙻𝙴𝙰𝚂𝙴 𝚆𝙰𝙸𝚃...`, event.threadID, event.messageID);
+  
+  try {
+    const url = event.type === "message_reply" && event.messageReply.attachments[0]?.type === "photo"
+      ? { link: event.messageReply.attachments[0].url }
+      : {};
 
-        if (!message) return api.sendMessage("Please provide your question.\n\nExample: ai What is the solar system?", threadID, messageID);
-
-        api.sendMessage(
-            "𝙷𝙾𝙼𝙴𝚁 𝙰𝙸 𝚂𝙴𝙰𝚁𝙲𝙷𝙸𝙽𝙶 𝚃𝙷𝙴 𝙰𝙽𝚂𝚆𝙴𝚁...",
-            threadID,
-            async (err, info) => {
-                if (err) return;
-                try {
-                    if (event.type === "message_reply" && event.messageReply.attachments && event.messageReply.attachments[0]) {
-                        const attachment = event.messageReply.attachments[0];
-
-                        if (attachment.type === "photo") {
-                            const imageURL = attachment.url;
-                            const geminiUrl = `https://joncll.serv00.net/chat.php?ask=${encodeURIComponent(message)}&imgurl=${encodeURIComponent(imageURL)}`;
-                            const geminiResponse = await axios.get(geminiUrl);
-                            const { vision } = geminiResponse.data;
-
-                            if (vision) {
-                                return api.editMessage(
-                                    `•| 𝙷𝙾𝙼𝙴𝚁 𝙰𝙸 𝙱𝙾𝚃 𝚁𝙴𝙲𝙾𝙶𝙽𝙸𝚉𝙴 𝚃𝙷𝙴 𝙸𝙼𝙰𝙶𝙴 |•\n\n${vision}\n\n•| 𝙾𝚆𝙽𝙴𝚁 : 𝙷𝙾𝙼𝙴𝚁 𝚁𝙴𝙱𝙰𝚃𝙸𝚂 |•`,
-                                    info.messageID
-                                );
-                            } else {
-                                return api.sendMessage("🤖 Failed to recognize the image.", threadID, messageID);
-                            }
-                        }
-                    }
-
-                    const response = await gptConvoAPI(message, senderID);
-                    api.editMessage(
-                        `•| 𝙷𝙾𝙼𝙴𝚁 𝙰𝙸 𝙱𝙾𝚃 |•\n\n${response}\n\n•| 𝙾𝚆𝙽𝙴𝚁 : 𝙷𝙾𝙼𝙴𝚁 𝚁𝙴𝙱𝙰𝚃𝙸𝚂 |•`,
-                        info.messageID,
-                        threadID,
-                        messageID
-                    );
-                } catch (error) {
-                    api.sendMessage("An error occurred while processing your request.", threadID, messageID);
-                }
-            },
-            messageID
-        );
-    },
+    const { data } = await axios.post('https://satomoigpt.onrender.com/chat', {
+      prompt: input,
+      customId: event.senderID,
+      ...url
+    });
+    api.sendMessage(`•| 𝙷𝙾𝙼𝙴𝚁 𝙰𝙸 𝙱𝙾𝚃 |•\n\n${data.message}\n\n•| 𝙾𝚆𝙽𝙴𝚁 : 𝙷𝙾𝙼𝙴𝚁 𝚁𝙴𝙱𝙰𝚃𝙸𝚂 |•`, event.threadID, event.messageID);
+  } catch {
+    api.sendMessage('An error occurred while processing your request.', event.threadID, event.messageID);
+  }
+};
