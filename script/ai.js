@@ -1,51 +1,36 @@
-const axios = require('axios');
-
 module.exports.config = {
-  name: 'ai',
-  version: '1.0.0',
+  name: "ai",
   role: 0,
+  credits: "Deku",
+  description: "Talk to Gemini (conversational)",
   hasPrefix: false,
-  aliases: [],
-  description: "An AI command powered by GPT-4",
-  usages: "ai [prompt]",
-  credits: 'Developer',
-  cooldowns: 3,
-  dependencies: {
-    "axios": ""
-  }
+  version: "5.6.7",
+  aliases: ["bard"],
+  usage: "gemini [prompt]"
 };
 
-module.exports["run"] = async function({ api, event, args }) {
-  const input = args.join(' ');
-
-  if (!input) {
-    api.sendMessage(`Please provide a question or statement after 'ai'. For example: 'ai What is the capital of France?'`, event.threadID, event.messageID);
-    return;
-  }
-  
-  if (input === "clear") {
-    try {
-      await axios.post('https://satomoigpt.onrender.com/clear', { id: event.senderID });
-      return api.sendMessage("Chat history has been cleared.", event.threadID, event.messageID);
-    } catch {
-      return api.sendMessage('An error occurred while clearing the chat history.', event.threadID, event.messageID);
-    }
-  }
-
-  api.sendMessage(`𝙷𝙾𝙼𝙴𝚁 𝙰𝙸 𝙱𝙾𝚃 𝚁𝙴𝚂𝙿𝙾𝙽𝙳𝙸𝙽𝙶 𝚃𝙾 to "${input}" 𝙿𝙻𝙴𝙰𝚂𝙴 𝚆𝙰𝙸𝚃...`, event.threadID, event.messageID);
-  
+module.exports.run = async function ({ api, event, args }) {
+  const axios = require("axios");
+  let prompt = encodeURIComponent(args.join(" ")),
+    uid = event.senderID,
+    url;
+  if (!prompt) return api.sendMessage(`Please enter a prompt.`, event.threadID);
+  api.sendTypingIndicator(event.threadID);
   try {
-    const url = event.type === "message_reply" && event.messageReply.attachments[0]?.type === "photo"
-      ? { link: event.messageReply.attachments[0].url }
-      : {};
-
-    const { data } = await axios.post('https://satomoigpt.onrender.com/chat', {
-      prompt: input,
-      customId: event.senderID,
-      ...url
-    });
-    api.sendMessage(`•| 𝙷𝙾𝙼𝙴𝚁 𝙰𝙸 𝙱𝙾𝚃 |•\n\n${data.message}\n\n•| 𝙾𝚆𝙽𝙴𝚁 : 𝙷𝙾𝙼𝙴𝚁 𝚁𝙴𝙱𝙰𝚃𝙸𝚂 |•`, event.threadID, event.messageID);
-  } catch {
-    api.sendMessage('An error occurred while processing your request.', event.threadID, event.messageID);
+    const geminiApi = `https://deku-rest-api.gleeze.com/gemini`;
+    if (event.type == "message_reply") {
+      if (event.messageReply.attachments[0]?.type == "photo") {
+        url = encodeURIComponent(event.messageReply.attachments[0].url);
+        const res = (await axios.get(`${geminiApi}/gemini?prompt=${prompt}&url=${url}`)).data;
+        return api.sendMessage(res.gemini, event.threadID);
+      } else {
+        return api.sendMessage('Please reply to an image.', event.threadID);
+      }
+    }
+    const response = (await axios.get(`${geminiApi}/gemini?prompt=${prompt}`)).data;
+    return api.sendMessage(response.gemini, event.threadID);
+  } catch (error) {
+    console.error(error);
+    return api.sendMessage('Error skills issue', event.threadID);
   }
 };
