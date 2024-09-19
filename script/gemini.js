@@ -1,36 +1,59 @@
+const axios = require('axios');
+
 module.exports.config = {
-	name: "gemini",
-	role: 0,
-	credits: "Deku", //https://facebook.com/joshg101
-	description: "Talk to Gemini (conversational)",
-	hasPrefix: false,
-	version: "5.6.7",
-	aliases: ["bard"],
-	usage: "gemini [prompt]"
+    name: 'gemini',
+    version: '1.0.0',
+    role: 0,
+    hasPrefix: true,
+    aliases: ['gemini'],
+    description: 'Interact with the Gemin',
+    usage: 'gemini [custom prompt] (attach image or not)',
+    credits: 'churchill',
+    cooldown: 3,
 };
 
-module.exports.run = async function ({ api, event, args }) {
-	const axios = require("axios");
-	let prompt = args.join(" "),
-		uid = event.senderID,
-		url;
-	if (!prompt) return api.sendMessage(`Please enter a prompt.`, event.threadID);
-	api.sendTypingIndicator(event.threadID);
-	try {
-		const geminiApi = `https://deku-rest-api.gleeze.com/`;
-		if (event.type == "message_reply") {
-			if (event.messageReply.attachments[0]?.type == "photo") {
-				url = encodeURIComponent(event.messageReply.attachments[0].url);
-				const res = (await axios.get(`${geminiApi}/gemini?prompt=${prompt}&url=${url}`)).data;
-				return api.sendMessage(res.gemini, event.threadID);
-			} else {
-				return api.sendMessage('Please reply to an image.', event.threadID);
-			}
-		}
-		const response = (await axios.get(`${geminiApi}/gemini?prompt=${prompt}`)).data;
-		return api.sendMessage(response.gemini, event.threadID);
-	} catch (error) {
-		console.error(error);
-		return api.sendMessage('❌ | An error occurred. You can try typing your query again or resending it. There might be an issue with the server that\'s causing the problem, and it might resolve on retrying.', event.threadID);
-	}
+module.exports.run = async function({ api, event, args }) {
+    const attachment = event.messageReply?.attachments[0] || event.attachments[0];
+    const customPrompt = args.join(' ');
+
+    if (!customPrompt && !attachment) {
+        return api.sendMessage('Please provide a prompt or attach a photo for the gemini to analyze.', event.threadID, event.messageID);
+    }
+
+    let apiUrl = 'https://deku-rest-api-3jvu.onrender.com/gemini?';
+
+    if (attachment && attachment.type === 'photo') {
+        const prompt = customPrompt || 'answer this photo';
+        const imageUrl = attachment.url;
+        apiUrl += `prompt=${encodeURIComponent(prompt)}&url=${encodeURIComponent(imageUrl)}`;
+    } else {
+        apiUrl += `prompt=${encodeURIComponent(customPrompt)}`;
+    }
+
+    const initialMessage = await new Promise((resolve, reject) => {
+        api.sendMessage({
+            body: '🔍 Processing your request...',
+            mentions: [{ tag: event.senderID, id: event.senderID }],
+        }, event.threadID, (err, info) => {
+            if (err) return reject(err);
+            resolve(info);
+        }, event.messageID);
+    });
+
+    try {
+        const response = await axios.get(apiUrl);
+        const aiResponse = response.data.gemini; // Accessing the "gemini" key directly
+        const formattedResponse = `
+✨ 𝙶𝚎𝚖𝚒𝚗𝚒 𝚁𝚎𝚜𝚙𝚘𝚗𝚜𝚎
+━━━━━━━━━━━━━━━━━━
+${aiResponse.trim()}
+━━━━━━━━━━━━━━━━━━
+        `;
+
+        await api.editMessage(formattedResponse.trim(), initialMessage.messageID);
+
+    } catch (error) {
+        console.error('Error:', error);
+        await api.editMessage('An error occurred, please try use "ai2" command.', initialMessage.messageID);
+    }
 };
