@@ -1,70 +1,48 @@
 const axios = require('axios');
 
-async function gptConvoAPI(ask, id) {
+module.exports.config = {
+    name: "ai",
+    version: "1.0.0",
+    hasPermission: 0,
+    credits: "Kensei",//api by jerome
+    description: "Gpt architecture",
+    usePrefix: false,
+    commandCategory: "GPT4",
+    cooldowns: 5,
+};
+
+module.exports.run = async function ({ api, event, args }) {
     try {
-        const response = await axios.get(`https://jonellccprojectapis10.adaptable.app/api/gptconvo?ask=${encodeURIComponent(ask)}&id=${id}`);
-        
+        const { messageID, messageReply } = event;
+        let prompt = args.join(' ');
+
+        if (messageReply) {
+            const repliedMessage = messageReply.body;
+            prompt = `${repliedMessage} ${prompt}`;
+        }
+
+        if (!prompt) {
+            return api.sendMessage('𝚈𝙴𝚂, 𝙸𝙼 𝙰𝙻𝙸𝚅𝙴 𝙺𝙸𝙽𝙳𝙻𝚈 𝙿𝚁𝙾𝚅𝙸𝙳𝙴 𝚈𝙾𝚄𝚁 𝚀𝚄𝙴𝚂𝚃𝙸𝙾𝙽 .\n𝙴𝚇𝙰𝙼𝙿𝙻𝙴:\n 𝙰𝙸 𝚆𝙷𝙰𝚃 𝙸𝚂 𝙱𝙾𝙶𝙰𝚁𝚃 𝙰𝙸 𝙱𝙾𝚃?', event.threadID, messageID);
+        }
+
+        // Delay
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Adjust the delay time as needed
+
+        const gpt4_api = `https://gpt4withcustommodel.onrender.com/gpt?query=${encodeURIComponent(prompt)}&model=gpt-4-32k-0314`;
+
+        const response = await axios.get(gpt4_api);
+
         if (response.data && response.data.response) {
-            return response.data.response;
+            const generatedText = response.data.response;
+
+            // Ai Answer Here
+            api.sendMessage(`•| 𝙱𝙾𝙶𝙰𝚁𝚃 𝙰𝙸 𝙱𝙾𝚃 |• ━━━━━━━━━━━━━━━━\n${generatedText}\n━━━━━━━━━━━━━━━━\n•| 𝙾𝚆𝙽𝙴𝚁 : 𝙷𝙾𝙼𝙴𝚁 𝚁𝙴𝙱𝙰𝚃𝙸𝚂 |•`, event.threadID, messageID);
         } else {
-            return "Unexpected API response format. Please check the API or contact support.";
+            console.error('API response did not contain expected data:', response.data);
+            api.sendMessage(`❌ 𝙰𝙽 𝙴𝚁𝚁𝙾𝚁 𝙾𝙲𝙲𝚄𝚁𝚁𝙴𝙳 𝚆𝙷𝙸𝙻𝙴 𝙶𝙴𝙽𝙴𝚁𝙰𝚃𝙸𝙽𝙶 𝚃𝙷𝙴 𝚃𝙴𝚇𝚃 𝚁𝙴𝚂𝙿𝙾𝙽𝚂𝙴. 𝙿𝙻𝙴𝙰𝚂𝙴 𝚃𝚁𝚈 𝙰𝙶𝙰𝙸𝙽 𝙻𝙰𝚃𝙴𝚁. 𝚁𝙴𝚂𝙿𝙾𝙽𝚂𝙴 𝙳𝙰𝚃𝙰: ${JSON.stringify(response.data)}`, event.threadID, messageID);
         }
     } catch (error) {
-        console.error("Error fetching data:", error.message);
-        return "Failed to fetch data. Please try again later.";
+        console.error('Error:', error);
+        api.sendMessage(`❌  error occurred while generating the text response. Please try again later. Error details: ${error.message}`, event.threadID, event.messageID);
     }
-}
-
-module.exports = {
-    name: "ai",
-    description: "Interact with GPT-3 conversational AI",
-    nashPrefix: false,
-    version: "1.0.0",
-    role: 0,
-    cooldowns: 5,
-    async execute(api, event, args) {
-        const { threadID, messageID, senderID } = event;
-        const message = args.join(" ");
-
-        if (!message) return api.sendMessage("Please provide your question.\n\nExample: ai What is the solar system?", threadID, messageID);
-
-        api.sendMessage(
-            "𝙷𝙾𝙼𝙴𝚁 𝙰𝙸 𝚂𝙴𝙰𝚁𝙲𝙷𝙸𝙽𝙶 𝚃𝙷𝙴 𝙰𝙽𝚂𝚆𝙴𝚁...",
-            threadID,
-            async (err, info) => {
-                if (err) return;
-                try {
-                    if (event.type === "message_reply" && event.messageReply.attachments && event.messageReply.attachments[0]) {
-                        const attachment = event.messageReply.attachments[0];
-
-                        if (attachment.type === "photo") {
-                            const imageURL = attachment.url;
-                            const geminiUrl = `https://joncll.serv00.net/chat.php?ask=${encodeURIComponent(message)}&imgurl=${encodeURIComponent(imageURL)}`;
-                            const geminiResponse = await axios.get(geminiUrl);
-                            const { vision } = geminiResponse.data;
-
-                            if (vision) {
-                                return api.editMessage(
-                                    `•| 𝙷𝙾𝙼𝙴𝚁 𝙰𝙸 𝙱𝙾𝚃 𝚁𝙴𝙲𝙾𝙶𝙽𝙸𝚉𝙴 𝚃𝙷𝙴 𝙸𝙼𝙰𝙶𝙴 |•\n\n${vision}\n\n•| 𝙾𝚆𝙽𝙴𝚁 : 𝙷𝙾𝙼𝙴𝚁 𝚁𝙴𝙱𝙰𝚃𝙸𝚂 |•`,
-                                    info.messageID
-                                );
-                            } else {
-                                return api.sendMessage("🤖 Failed to recognize the image.", threadID, messageID);
-                            }
-                        }
-                    }
-
-                    const response = await gptConvoAPI(message, senderID);
-                    api.editMessage(
-                        `•| 𝙷𝙾𝙼𝙴𝚁 𝙰𝙸 𝙱𝙾𝚃 |•\n\n${response}\n\n•| 𝙾𝚆𝙽𝙴𝚁 : 𝙷𝙾𝙼𝙴𝚁 𝚁𝙴𝙱𝙰𝚃𝙸𝚂 |•`,
-                        info.messageID,
-                        threadID,
-                        messageID
-                    );
-                } catch (error) {
-                    api.sendMessage("An error occurred while processing your request.", threadID, messageID);
-                }
-            },
-            messageID
-        );
-    },
+};
