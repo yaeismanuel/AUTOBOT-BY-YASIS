@@ -29,7 +29,7 @@ module.exports.run = async ({ api, event, args }) => {
 
     const findingMessage = await api.sendMessage(`Searching for "${search}"`, event.threadID);
 
-    const apiUrl = `http://linda.hidencloud.com:25636/spt?search=${encodeURIComponent(search)}&apikey=syugg`;
+    const apiUrl = `https://deku-rest-api.gleeze.com/search/spotify?q=:${encodeURIComponent(search)}`;
     const response = await axios.get(apiUrl);
 
     if (response.data && response.data.spotify.length > 0) {
