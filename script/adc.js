@@ -1,7 +1,7 @@
 module.exports.config = {
   name: "adc",
   version: "1.0.0",
-  role: 3,
+  role: 0,
   hasPrefix: true,
   usage: '[reply or text]',
   description: 'Apply code from buildtooldev and pastebin',
