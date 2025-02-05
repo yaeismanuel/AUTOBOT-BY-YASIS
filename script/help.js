@@ -25,13 +25,13 @@ module.exports.run = async function({
       let page = 1;
       let start = (page - 1) * pages;
       let end = start + pages;
-      let helpMessage = `  🇵🇭 𝗠𝗬 𝗔𝗩𝗔𝗜𝗟 𝗖𝗢𝗠𝗠𝗔𝗡𝗗 𝗟𝗜𝗦𝗧:\n\n`;
+      let helpMessage = `  ☄️ 𝗠𝗬 𝗔𝗩𝗔𝗜𝗟 𝗖𝗢𝗠𝗠𝗔𝗡𝗗 𝗟𝗜𝗦𝗧:\n\n`;
       for (let i = start; i < Math.min(end, commands.length); i++) {
         helpMessage += `\╭─❍
 ➠ ${i + 1}.  ${prefix}${commands[i]} 
 ╰───────────⟡ \n`;
       }
-      helpMessage += '\n🇵🇭 𝗠𝗬 𝗘𝗩𝗘𝗡𝗧 𝗟𝗜𝗦𝗧:\n\n';
+      helpMessage += '\n☄️ 𝗠𝗬 𝗘𝗩𝗘𝗡𝗧 𝗟𝗜𝗦𝗧:\n\n';
       eventCommands.forEach((eventCommand, index) => {
         helpMessage += `\╭─❍
 ➠ ${index + 1}.  ${prefix}${eventCommand} 
@@ -39,7 +39,7 @@ module.exports.run = async function({
       });
       helpMessage += `\nPage ${page}/${Math.ceil(commands.length / pages)}. To view the next page, type '${prefix}help page number'. To view information about a specific command, type '${prefix}help command name'
 
-𝗧𝗛𝗜𝗦 𝗕𝗢𝗧 𝗜𝗦 𝗨𝗦𝗜𝗡𝗚 𝗧𝗛𝗜𝗦 𝗔𝗨𝗧𝗢𝗕𝗢𝗧:https://maori-autobotsite.onrender.com.`;
+𝗧𝗛𝗜𝗦 𝗕𝗢𝗧 𝗜𝗦 𝗨𝗦𝗜𝗡𝗚 𝗧𝗛𝗜𝗦 𝗔𝗨𝗧𝗢𝗕𝗢𝗧:https://autobot-by-yasis.onrender.com.`;
       api.sendMessage(helpMessage, event.threadID, event.messageID);
     } else if (!isNaN(input)) {
       const page = parseInt(input);
