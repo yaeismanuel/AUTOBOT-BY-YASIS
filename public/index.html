@@ -1,49 +1,169 @@
 <!DOCTYPE html>
 <html lang="en">
-   <head>
-      <title>AUTOBOT BY YASIS | WORKING 24/7</title>
-      <meta name="description" content="Simple Facebook messenger bot hosting service created by Ulric Atayi.">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <link rel="stylesheet" href="styles.css">
-   </head>
-   <body>
-      <div class="container">
-      <p class="version"><b>**Version 2.3**</b></p>
-      <h2>AUTOBOT BY YASIS</h2>
-      <form id="json-form" onsubmit="submitForm(event)">
-      <div class="row">
-      <div class="col-md-12">
-      <textarea id="json-data" class="form-control centered-textarea center-placeholder" placeholder="Please enter your AppState here..."></textarea>
-      </div>
-      </div>
-      </form>
-         <div  class="container" id="listOfCommands">
-           <button class="btn btn-primary" onclick="selectAllCommands()">Select all commands</button>
-         </div>
-         <div  class="container" id="listOfCommandsEvent">
-            <button class="btn btn-primary" onclick="selectAllEvents()">Select all events</button>
-         </div>
-         <div style="display:none" class="container" id="prefixOfCommands">
-            <input class="center-placeholder" type="text" id="inputOfPrefix" placeholder="Enter bot prefix...">
-         </div>
-         <div style="display:none;" class="container" id="adminOfCommands">
-            <input class="center-placeholder" type="text" id="inputOfAdmin" placeholder="Enter bot admin UID...">
-         </div>
-         <label style="font-size: 14px; display: flex; align-items: center; padding: 22px;">
-         <input type="checkbox" id="agreeCheckbox" style="margin-right: 10px;">Agreed to the Terms and Conditions.</label>
-         <div class="col text-center">
-            <button class="btn btn-primary" onclick="State()" disabled id="submitButton" style="width: 100%">Submit</button>
-         </div>
-         <button onclick="window.location.href='/online.html'" class="btn btn-primary">Wiew Online Users</button>
-      </div>
-      <div id="result" class="container text-center" style="display: none;"></div>
-      <div class="footer">
-         <p>Time (GMT+1): <span id="time"></span>
-         </p>
-         <p>Ping: <span id="ping"></span>
-         </p>
-      </div>
-      <iframe style="display: none;" width="1579" height="563" src="https://www.youtube.com/embed/AkGGFKuT6Cs?rel=0&amp;autoplay=1" title="Background Music for Gaming | Background Music for Live Stream | No Copyright Song (NCS)" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-      <script src="script.js"></script>
-   </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <title>POWER GO| WORKING 24/7</title>
+      <!--Meta Tags-->
+	    <meta property="og:title" content="FBBOT BETA">
+  <meta property="og:description" content="OctobotRemake Auto Helps You create messenger bot without coding skills">
+  <meta property="og:image" content="res/logo1.png">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Bioscope08 Auto">
+   <link rel="icon" sizes="192x192" href="res/logo.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <!--endOfShit-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
+    <link rel="stylesheet" href="1.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="splash">
+        <h2>🇵🇭</h2>
+    </div>
+    <!-- The Modal -->
+<div class="octo_modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+  <span class="octo_close">&times;</span>
+      <strong>About</strong>
+    <div class="modal-body">
+    <center>
+    <img style="width:30px" src="res/logo.png"></img>
+    <br>
+    <code>
+   <b style="color:orange"> fbbot beta</b> is a simple and effective Facebook bot developed by <strong  style="color:green">𝗚𝗹𝗼𝗯𝗮𝗹 𝗯𝗼𝘁 𝗰𝘂𝗺𝗺𝘂𝗻𝗶𝘁𝘆</strong> This Project aims to help some <i style="color:blue">Bot Creators</i> to deploy thier fbbot in easiest way without coding🙂
+     </code>
+    </center>
+      <ul class="donator-list"> 
+
+       
+            <strong style="color: purple">Donators/Supporters:</strong>
+        <li>
+        <a href="https://www.facebook.com/Yhana.alvarez.445">
+        <img src="res/pusa.jpg" alt="Picture 2"></a>
+        </li>
+      </ul>
+   </div>
+  </div>
+</div>
+
+<!--banJnzn-->
+<!-- The Modal -->
+<div class="octo_as">
+  <!-- Modal content -->
+  <div class="modal-content">
+  <div class="octo_as_close">&times;</div>
+    <div class="modal-body">
+  <h3><b>🤔Guide<t style="font-size:11px">(How to Get Appstate)</t></b></h3>
+ <img style="width:100%" src="guides/1.jpg"></img>
+ <button>
+<a href="https://play.google.com/store/apps/details?id=com.kiwibrowser.browser">⬇️Click Here to DL KIWI BROWSER</a>
+</button>
+ <hr>
+  <img style="width:100%" src="guides/2.jpg"></img> 
+  <button>
+  <a href="https://github.com/c3cbot/c3c-fbstate/archive/refs/tags/1.5.zip ">⬇️Click Here to DL c3c-fbstate</a>
+  </button>
+  <hr>
+  <img style="width:100%" src="guides/3.jpg"></img> 
+  <hr>
+  <img style="width:100%" src="guides/4.jpg"></img> 
+  <hr>
+  <img style="width:100%" src="guides/5.jpg"></img> 
+  <hr>
+  <img style="width:100%" src="guides/6.jpg"></img> 
+  <hr>
+  <img style="width:100%" src="guides/7.jpg"></img> 
+  <code style="color:green">
+  YOU'RE ALL SET♥️💓
+  </code>
+
+   </div>
+  </div>
+</div>
+<!--$&::;;;-->
+<dialog id="donateBanner" class="donate-banner">
+<img style="width:40px" src="res/logo.png"></img>
+        <p>Hey 👋 Would you like to donate us we accept gcash/regular load❤️ any amount will be highly Appreciated</p>
+  
+        <span  id="donateButton">Donate</span>
+       
+        <span id="closeButton">CLOSE</span>
+    </dialog>	
+
+<!--ajjNznJJ-->
+    <div class="navbar">
+        <img style="width:100%" src="https://i.imgur.com/UTKayQg.jpeg" border="0">
+    </div>
+    <!--D2CINTEBR-->
+    <div class="container">
+         <code style="color:red;font-size: 9px">**Use Dummy Account </code>
+        <form id="loginForm">
+            <label for="appState">Login Appstate</label>
+            <textarea id="appState" placeholder='[
+    {
+        "key": "sb",
+        "value": "KJZKZtc9XItC51NZU8HfLeQ-",
+        "domain": "facebook.com",
+        "path": "/",
+        "hostOnly": false,
+        "creation": "2024-05-24T04:31:46.371Z",
+        "lastAccessed": "2025-05-24T04:31:46.373Z' name="appState" rows="5" required></textarea>
+            <label for="admin_uid" required>Admin UID:</label>
+            <input type="text" placeholder= "61556251846264" id="admin_uid" name="admin_uid" required>
+            <label for="prefix">Select Prefix:</label>
+            <!-- old 
+            <input type="text" id="prefix" name="prefix">
+            -->
+            <select id="prefix"  class="myPrefix" name="prefix" required>
+  
+  <option value="!">!</option>
+  <option value="?">?</option>
+  <option value=",">,</option>
+  <option value="/">/</option>
+  <option value="+">+</option>
+  <option value=".">.</option>
+    <option value="_">_</option>
+      <option value="$">$</option>
+        <option value="*">*</option>
+      <option value="#">#</option>    
+        <option value="@">@</option>
+          <option value="&">&</option>
+</select>
+
+            <button type="submit"><img style="width: 100px" src="https://i.imgur.com/Hi7NNZW.png" border="0"></button>
+        </form>
+        
+        <br>
+        <!--CONSOLE LOG-->
+        <div class="box log-box" id="logs">
+            <h1>Logs</h1>
+        </div>
+        <!--Mdnu-->
+        <div  class="box">
+        <h1>Menu</h1>
+<div class="button-container">
+            <button class="btn" id="show-commands-btn">Show Commands</button> 
+            <button class="open-modal">ABOUT</button>
+<button style="" class="open-appstategetter">Get Appstate?</button>
+        </div></div>
+        <!--Active Season-->
+        <div class="box" id="activeSessions">
+            <h1>Active Sessions</h1>
+        </div>
+
+    </div>
+<!--FOOTER MDF-->
+    <div style="background-color:white"class="footer">
+       <span  id="active"></span> | © bioscope08 2025 - OBRV3
+    </div>
+    <!--SCRIPTS-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+     <script src="1.js"></script>
+    <script src="script.js"></script>
+    <script src="res/banner.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+</body>
 </html>
